@@ -30,7 +30,7 @@ contract Poolnft is ERC721Enumerable, Ownable {
         address[] calldata addresses,
         uint8 numAllowedToFreeMint
     ) external onlyOwner {
-        for (uint256 i = 0; i < addresses.length; i++) {
+        for (uint256 i = 0; i < addresses.length; i++) {    //Set Allow list for free mint
             _allowList[addresses[i]] = numAllowedToFreeMint-1;
         }
         emit SetAllowList(addresses, numAllowedToFreeMint);
@@ -42,7 +42,7 @@ contract Poolnft is ERC721Enumerable, Ownable {
 
     function mint() public payable returns (uint256) {
         require(_tokenIds.current() < MAX_ELEMENTS, "Sale end");
-        if (_tokenFree[msg.sender] == false) {
+        if (_tokenFree[msg.sender] == false) {  //Free Mint
             if (_allowList[msg.sender] <= 0) {
                 _tokenFree[msg.sender] = true;
             } else {
@@ -54,7 +54,7 @@ contract Poolnft is ERC721Enumerable, Ownable {
             emit CreatePoolNFT(newItemId);
             return newItemId;
         } else {
-            require(msg.value >= PRICE, "Value below price");
+            require(msg.value >= PRICE, "Value below price"); //Price Mint
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
             _mint(msg.sender, newItemId);
@@ -67,7 +67,7 @@ contract Poolnft is ERC721Enumerable, Ownable {
         view
         returns (uint256[] memory)
     {
-        uint256 tokenCount = balanceOf(_owner);
+        uint256 tokenCount = balanceOf(_owner); // Get all NFTS of _owner
 
         uint256[] memory tokensId = new uint256[](tokenCount);
         for (uint256 i = 0; i < tokenCount; i++) {
